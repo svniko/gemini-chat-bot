@@ -15,10 +15,15 @@ python -m venv venv
 ```
 
 5. Активуйте віртуальне оточення
-```
-myenv\Scripts\activate
-```
 
+Якщо користуєтесь `Windows`
+```
+venv\Scripts\activate
+```
+Якщо `mac`/`linux`
+```
+source venv/bin/activate
+```
 6. Встановіть необхідні модулі<br>
 ```
 pip install -r requirements.txt
@@ -29,7 +34,7 @@ pip install google-genai python-dotenv rich
 ```
 7. Створіть файл `.env` в папці з файлом `bot.py` і додайте туди API ключ
  ```
- GEMINI_API_KEY=YOR_API_KEY
+ GEMINI_API_KEY=YOUR_API_KEY
  ```
 
 
