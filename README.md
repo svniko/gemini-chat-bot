@@ -27,6 +27,10 @@ pip install -r requirements.txt
 ``` 
 pip install google-genai python-dotenv rich
 ```
+7. Створіть файл `.env` в папці з файлом `bot.py` і додайте туди API ключ
+ ```
+ GEMINI_API_KEY=YOR_API_KEY
+ ```
 
 
 
