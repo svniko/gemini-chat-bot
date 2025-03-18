@@ -9,11 +9,15 @@ from rich.markdown import Markdown
 # Модуль для змінних оточення
 from dotenv import load_dotenv
 
+# Модуль для опрацювання дати і часу
+from datetime import datetime
+
 # Збережіть ключ API в файлі .env
 load_dotenv('.env')
 
 # Об'єкт для форматованого виведення в консоль
 console = Console()
+keywords = []
 
 def generate():
     client = genai.Client(
@@ -24,9 +28,9 @@ def generate():
     )
 
     # Код можнга використовувати з різними моделями 
-    # model = "gemini-2.0-pro-exp-02-05"
-    model = "gemini-2.0-flash-exp"
-
+    model = "gemini-2.0-pro-exp-02-05"
+    # model = "gemini-2.0-flash-exp"
+   
     # Список для збереження питань та відповідей
     contents = []
 
@@ -71,6 +75,20 @@ def generate():
 
         if user_input.lower() == "stop":
             print("Bot: На все добре!")
+
+            # Визначаємо ключові слова чату
+            contents.append(
+                types.Content(
+                    role="user",
+                    parts=[types.Part.from_text(text="Give 2 or more keywords about whole conversation. Just keywords without additional text. Use main language of conversation")],
+                )
+            )
+            response = client.models.generate_content(
+                model=model, 
+                contents=contents)
+            keywords = response.text
+            # print (keywords)
+
             break
 
         # Додаємо запит користувача в список контенту
@@ -102,11 +120,16 @@ def generate():
         console.print("Bot:", md)
 
     #Зберігаємо історію спілкування в чаті
-    with open('history.txt', 'w', encoding="utf-8") as out:
+
+    # Отримуємо поточну дату і час у форматі YYYY-MM-DD_HH-MM-SS
+    timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+    file_name = f"history_{timestamp}.txt"
+
+    with open(file_name, 'w', encoding="utf-8") as out:
+        out.write(f"Ключові слова:\n{keywords}\n\n")
         for content in contents:
             out.write(f"{content.role}: ")
             out.write(f"{content.parts[0].text}\n")
-
 
 if __name__ == "__main__":
     generate()
